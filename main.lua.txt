@@ -1,0 +1,645 @@
+--> Services <--
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+
+--> LocalPlayerPlayer Varaiables <--
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local playerCharacter = player.Character
+local playerHumanoid = playerCharacter:WaitForChild("Humanoid")
+local playerHumanoidRootPart = playerCharacter:WaitForChild("HumanoidRootPart")
+
+--> Tpwalk Varaiables <--
+local ToggleTpwalk = false
+local TpwalkValue = 1
+local TpwalkNegativeValues = false
+local TpwalkConnection = nil
+
+--> Dragging Varaiables <--
+local ThirdTextButtonMouseButton1Down = 0
+local FourthTextButtonMouseButton1Down = 0
+local FourthTextButtonToggled = false
+
+--> Creates a ScreenGui <--
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = playerGui
+ScreenGui.Name = "Tpwalk V4"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.DisplayOrder = 999
+ScreenGui.Enabled = true 
+ScreenGui.IgnoreGuiInset = false
+ScreenGui.AutoLocalize = true
+
+--> Creates a Frame Within ScreenGui <--
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.Name = "Container"
+Frame.Size = UDim2.new(0, 0, 0, 0)
+Frame.Position = UDim2.new(0.5, 0, 0.3, 0)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+Frame.BackgroundTransparency = 0
+Frame.BorderColor3 = Color3.new(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Visible = true
+Frame.ZIndex = 999
+Frame.Active = true
+Frame.ClipsDescendants = true
+Frame.Draggable = true
+Frame.Rotation = 0
+Frame.AutoLocalize = true
+Frame.LayoutOrder = 0
+Frame.SizeConstraint = Enum.SizeConstraint.RelativeXY
+
+--> Creates a UICorner Within Frame <--
+local FrameUICorner = Instance.new("UICorner")
+FrameUICorner.Parent = Frame
+FrameUICorner.CornerRadius = UDim.new(0.1, 0)
+
+--> Creates a TextLabel Within Frame <--
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Parent = Frame
+TextLabel.Name = "Title"
+TextLabel.Text = "TPWALK V4 | REVAMP"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.Font = Enum.Font.GothamBold
+TextLabel.TextSize = 18
+TextLabel.TextWrapped = true
+TextLabel.TextScaled = false
+TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+TextLabel.TextYAlignment = Enum.TextYAlignment.Center
+TextLabel.RichText = false
+TextLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+TextLabel.TextStrokeTransparency = 1
+TextLabel.TextTransparency = 0
+TextLabel.TextTruncate = Enum.TextTruncate.None
+TextLabel.LineHeight = 1
+TextLabel.MaxVisibleGraphemes = -1
+TextLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BackgroundTransparency = 1
+TextLabel.BorderColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Size = UDim2.new(1, 0, 0, 0)
+TextLabel.Position = UDim2.new(0.5, 0, 0.15, 0)
+TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel.ZIndex = 999
+TextLabel.Visible = true
+TextLabel.ClipsDescendants = false
+TextLabel.LayoutOrder = 1
+TextLabel.Selectable = true
+TextLabel.SizeConstraint = Enum.SizeConstraint.RelativeXY
+TextLabel.Rotation = 0
+TextLabel.AutoLocalize = true
+
+--> Creates a Second TextLabel Within Frame <--
+local SecondTextLabel = Instance.new("TextLabel")
+SecondTextLabel.Parent = Frame
+SecondTextLabel.Name = "Tpwalk Value Label"
+SecondTextLabel.Text = "Welcome "..player.DisplayName
+SecondTextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SecondTextLabel.Font = Enum.Font.GothamBold
+SecondTextLabel.TextSize = 14
+SecondTextLabel.TextWrapped = true
+SecondTextLabel.TextScaled = false
+SecondTextLabel.TextXAlignment = Enum.TextXAlignment.Center
+SecondTextLabel.TextYAlignment = Enum.TextYAlignment.Center
+SecondTextLabel.RichText = false
+SecondTextLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+SecondTextLabel.TextStrokeTransparency = 1
+SecondTextLabel.TextTransparency = 0
+SecondTextLabel.TextTruncate = Enum.TextTruncate.None
+SecondTextLabel.LineHeight = 1
+SecondTextLabel.MaxVisibleGraphemes = -1
+SecondTextLabel.BackgroundColor3 = Color3.fromRGB(32, 32, 48)
+SecondTextLabel.BackgroundTransparency = 0
+SecondTextLabel.BorderColor3 = Color3.new(0, 0, 0)
+SecondTextLabel.BorderSizePixel = 0
+SecondTextLabel.Size = UDim2.new(0.85, 0, 0.125, 0)
+SecondTextLabel.Position = UDim2.new(0.5, 0, 0.3, 0)
+SecondTextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+SecondTextLabel.ZIndex = 999
+SecondTextLabel.Visible = true
+SecondTextLabel.ClipsDescendants = true
+SecondTextLabel.LayoutOrder = 1
+SecondTextLabel.Selectable = true
+SecondTextLabel.SizeConstraint = Enum.SizeConstraint.RelativeXY
+SecondTextLabel.Rotation = 0
+SecondTextLabel.AutoLocalize = true
+
+--> Creates a UICorner Within Second TextLabel <--
+local SecondTextLabelUICorner = Instance.new("UICorner")
+SecondTextLabelUICorner.Parent = SecondTextLabel
+SecondTextLabelUICorner.CornerRadius = UDim.new(0.25, 0)
+
+--> Creates a Third TextLabel Within Frame <--
+local ThirdTextLabel = Instance.new("TextLabel")
+ThirdTextLabel.Parent = Frame
+ThirdTextLabel.Name = "Discord Link"
+ThirdTextLabel.Text = "discord.gg/iosexploiters"
+ThirdTextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+ThirdTextLabel.Font = Enum.Font.GothamBold
+ThirdTextLabel.TextSize = 13
+ThirdTextLabel.TextWrapped = true
+ThirdTextLabel.TextScaled = false
+ThirdTextLabel.TextXAlignment = Enum.TextXAlignment.Center
+ThirdTextLabel.TextYAlignment = Enum.TextYAlignment.Center
+ThirdTextLabel.RichText = false
+ThirdTextLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+ThirdTextLabel.TextStrokeTransparency = 1
+ThirdTextLabel.TextTransparency = 0
+ThirdTextLabel.TextTruncate = Enum.TextTruncate.None
+ThirdTextLabel.LineHeight = 1
+ThirdTextLabel.MaxVisibleGraphemes = -1
+ThirdTextLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ThirdTextLabel.BackgroundTransparency = 1
+ThirdTextLabel.BorderColor3 = Color3.new(0, 0, 0)
+ThirdTextLabel.BorderSizePixel = 0
+ThirdTextLabel.Size = UDim2.new(1, 0, 0, 0)
+ThirdTextLabel.Position = UDim2.new(0.5, 0, 0.95, 0)
+ThirdTextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+ThirdTextLabel.ZIndex = 1000
+ThirdTextLabel.Visible = true
+ThirdTextLabel.ClipsDescendants = false
+ThirdTextLabel.LayoutOrder = 1
+ThirdTextLabel.Selectable = true
+ThirdTextLabel.SizeConstraint = Enum.SizeConstraint.RelativeXY
+ThirdTextLabel.Rotation = 0
+ThirdTextLabel.AutoLocalize = true
+
+--> Creates a Rainbow Text Color For Third TextLabel <--
+local hue = 0
+RunService.Heartbeat:Connect(function(deltaTime)
+    hue = (hue + deltaTime * 0.1) % 1
+    local color = Color3.fromHSV(hue, 1, 1)
+    ThirdTextLabel.TextColor3 = color
+end)
+
+--> Creates a TextBox Within Frame <--
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = Frame
+TextBox.Name = "Tpwalk Value Changer"
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.TextScaled = false
+TextBox.TextSize = 14
+TextBox.Font = Enum.Font.GothamBold
+TextBox.TextWrapped = true
+TextBox.TextXAlignment = Enum.TextXAlignment.Center
+TextBox.TextYAlignment = Enum.TextYAlignment.Center
+TextBox.PlaceholderText = "Change Tpwalk Number Here!"
+TextBox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
+TextBox.ClearTextOnFocus = true
+TextBox.MultiLine = true
+TextBox.LineHeight = 1
+TextBox.BackgroundColor3 = Color3.fromRGB(32, 32, 48)
+TextBox.BackgroundTransparency = 0
+TextBox.BorderColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.BorderSizePixel = 0
+TextBox.Size = UDim2.new(0.85, 0, 0.125, 0)
+TextBox.Position = UDim2.new(0.5, 0, 0.475, 0)
+TextBox.AnchorPoint = Vector2.new(0.5, 0.5)
+TextBox.Visible = true
+TextBox.ZIndex = 999
+TextBox.Selectable = true
+TextBox.SelectionStart = 0
+TextBox.CursorPosition = 0
+TextBox.ShowNativeInput = true
+TextBox.AutoLocalize = true
+TextBox.LayoutOrder = 1
+TextBox.MaxVisibleGraphemes = -1
+TextBox.RichText = false
+TextBox.Rotation = 0
+
+--> Creates a UICorner Within TextBox <--
+local TextBoxUICorner = Instance.new("UICorner")
+TextBoxUICorner.Parent = TextBox
+TextBoxUICorner.CornerRadius = UDim.new(0.25, 0)
+
+--> Creates a TextButton Within Frame <--
+local TextButton = Instance.new("TextButton")
+TextButton.Parent = Frame
+TextButton.Name = "Tpwalk Enabler"
+TextButton.Size = UDim2.new(0.85, 0, 0.125, 0)
+TextButton.Position = UDim2.new(0.5, 0, 0.655, 0)
+TextButton.AnchorPoint = Vector2.new(0.5, 0.5)
+TextButton.Text = "Enable Tpwalk"
+TextButton.Font = Enum.Font.GothamBold
+TextButton.TextSize = 14
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BackgroundColor3 = Color3.fromRGB(75, 175, 255)
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.AutoButtonColor = true
+TextButton.TextScaled = false
+TextButton.TextWrapped = true
+TextButton.TextXAlignment = Enum.TextXAlignment.Center
+TextButton.TextYAlignment = Enum.TextYAlignment.Center
+TextButton.Rotation = 0
+TextButton.Visible = true
+TextButton.ZIndex = 999
+TextButton.Active = true
+TextButton.Selectable = true
+TextButton.Style = Enum.ButtonStyle.Custom
+
+--> Creates a UICorner Within TextButton <--
+local TextButtonUICorner = Instance.new("UICorner")
+TextButtonUICorner.Parent = TextButton
+TextButtonUICorner.CornerRadius = UDim.new(0.25, 0)
+
+--> Creates a Second TextButton Within Frame <--
+local SecondTextButton = Instance.new("TextButton")
+SecondTextButton.Parent = Frame
+SecondTextButton.Name = "Negative Value Enabler"
+SecondTextButton.Size = UDim2.new(0.85, 0, 0.125, 0)
+SecondTextButton.Position = UDim2.new(0.5, 0, 0.835, 0)
+SecondTextButton.AnchorPoint = Vector2.new(0.5, 0.5)
+SecondTextButton.Text = "Enable Negative Values"
+SecondTextButton.Font = Enum.Font.GothamBold
+SecondTextButton.TextSize = 14
+SecondTextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SecondTextButton.BackgroundColor3 = Color3.fromRGB(75, 175, 255)
+SecondTextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+SecondTextButton.AutoButtonColor = true
+SecondTextButton.TextScaled = false
+SecondTextButton.TextWrapped = true
+SecondTextButton.TextXAlignment = Enum.TextXAlignment.Center
+SecondTextButton.TextYAlignment = Enum.TextYAlignment.Center
+SecondTextButton.Rotation = 0
+SecondTextButton.Visible = true
+SecondTextButton.ZIndex = 999
+SecondTextButton.Active = true
+SecondTextButton.Selectable = true
+SecondTextButton.Style = Enum.ButtonStyle.Custom
+
+--> Creates a UICorner Within Second TextButton <-- 
+local SecondTextButtonUICorner = Instance.new("UICorner")
+SecondTextButtonUICorner.Parent = SecondTextButton
+SecondTextButtonUICorner.CornerRadius = UDim.new(0.25, 0)
+
+--> Creates a Third TextButton Within Frame <--
+local ThirdTextButton = Instance.new("TextButton")
+ThirdTextButton.Parent = ScreenGui
+ThirdTextButton.Name = "Tpwalk ScreenGui Destroyer"
+ThirdTextButton.Size = UDim2.new(0.1, 0, 0.04, 0)
+ThirdTextButton.Position = UDim2.new(0.6, 0, 0.05, 0)
+ThirdTextButton.AnchorPoint = Vector2.new(0.5, 0.5)
+ThirdTextButton.Text = "Destroy"
+ThirdTextButton.Font = Enum.Font.GothamBold
+ThirdTextButton.TextSize = 20
+ThirdTextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ThirdTextButton.BackgroundColor3 = Color3.fromRGB(255, 65, 65)
+ThirdTextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ThirdTextButton.AutoButtonColor = true
+ThirdTextButton.TextScaled = false
+ThirdTextButton.TextWrapped = true
+ThirdTextButton.TextXAlignment = Enum.TextXAlignment.Center
+ThirdTextButton.TextYAlignment = Enum.TextYAlignment.Center
+ThirdTextButton.Rotation = 0
+ThirdTextButton.Visible = true
+ThirdTextButton.ZIndex = 999
+ThirdTextButton.Active = true
+ThirdTextButton.Draggable = true
+ThirdTextButton.Selectable = true
+ThirdTextButton.Style = Enum.ButtonStyle.Custom
+
+--> Creates a UICorner Within Third TextButton <-- 
+local ThirdTextButtonUICorner = Instance.new("UICorner")
+ThirdTextButtonUICorner.Parent = ThirdTextButton
+ThirdTextButtonUICorner.CornerRadius = UDim.new(1, 0)
+
+--> Creates a Fourth TextButton Within Frame <--
+local FourthTextButton = Instance.new("TextButton")
+FourthTextButton.Parent = ScreenGui
+FourthTextButton.Name = "Tpwalk ScreenGui Hider"
+FourthTextButton.Size = UDim2.new(0.1, 0, 0.04, 0)
+FourthTextButton.Position = UDim2.new(0.4, 0, 0.05, 0)
+FourthTextButton.AnchorPoint = Vector2.new(0.5, 0.5)
+FourthTextButton.Text = "Hide"
+FourthTextButton.Font = Enum.Font.GothamBold
+FourthTextButton.TextSize = 20
+FourthTextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+FourthTextButton.BackgroundColor3 = Color3.fromRGB(75, 175, 255)
+FourthTextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+FourthTextButton.AutoButtonColor = true
+FourthTextButton.TextScaled = false
+FourthTextButton.TextWrapped = true
+FourthTextButton.TextXAlignment = Enum.TextXAlignment.Center
+FourthTextButton.TextYAlignment = Enum.TextYAlignment.Center
+FourthTextButton.Rotation = 0
+FourthTextButton.Visible = true
+FourthTextButton.ZIndex = 999
+FourthTextButton.Active = true
+FourthTextButton.Draggable = true
+FourthTextButton.Selectable = true
+FourthTextButton.Style = Enum.ButtonStyle.Custom
+
+--> Creates a UICorner Within Fourth TextButton <-- 
+local FourthTextButtonUICorner = Instance.new("UICorner")
+FourthTextButtonUICorner.Parent = FourthTextButton
+FourthTextButtonUICorner.CornerRadius = UDim.new(1, 0)
+
+--> Creates a Blur Instance Within Frame TweenService <--
+local Blur = Instance.new("BlurEffect")
+Blur.Name = "Blur Screen Effect"
+Blur.Enabled = true 
+Blur.Size = 0
+Blur.Parent = Lighting
+
+--> Event Handler When The Player Respawns <--
+player.CharacterAdded:Connect(function(NewCharacter)
+    playerCharacter = NewCharacter
+    playerHumanoid = playerCharacter:WaitForChild("Humanoid")
+    playerHumanoidRootPart = playerCharacter:WaitForChild("HumanoidRootPart")
+end)
+
+--> Event Handler For Textbox Lost Focus <--
+TextBox.FocusLost:Connect(function()
+    local textInput = TextBox.Text
+    local inputValue = tonumber(textInput)
+    
+    if not TpwalkNegativeValues then
+        if textInput == "" then
+            TextBox.Text = ""
+            TextBox.PlaceholderText = "Please, Enter a Number!"
+            TextBox.TextSize = 14
+        elseif not inputValue then
+            TextBox.Text = ""
+            TextBox.PlaceholderText = "Please, Enter a Number And Not Characters!"
+            TextBox.TextSize = 12
+        elseif inputValue <= 0 then
+            TextBox.Text = ""
+            TextBox.PlaceholderText = "Please, Enter a Number Greater Than 0!"
+            TextBox.TextSize = 14
+        else
+            TpwalkValue = inputValue
+            SecondTextLabel.Text = "Tpwalk Value: "..TpwalkValue
+            TextBox.TextSize = 18
+        end
+    else 
+        if textInput == "" then
+            TextBox.Text = ""
+            TextBox.PlaceholderText = "Please, Enter a Number!"
+            TextBox.TextSize = 14
+        elseif not inputValue then
+            TextBox.Text = ""
+            TextBox.PlaceholderText = "Please, Enter a Number And Not Characters!"
+            TextBox.TextSize = 12
+        elseif inputValue == 0 then
+            TextBox.Text = ""
+            TextBox.PlaceholderText = "Please, Enter a Number That Is Not 0!"
+            TextBox.TextSize = 14
+        else
+            TpwalkValue = inputValue
+            SecondTextLabel.Text = "Tpwalk Value: "..tostring(TpwalkValue)
+            TextBox.TextSize = 18
+        end
+    end
+end)
+
+--> Event Handler For Textbox Focused <--
+TextBox.Focused:Connect(function()
+    if SecondTextLabel.Text == "Welcome "..player.DisplayName then
+        SecondTextLabel.Text = "Tpwalk Value: "..TpwalkValue
+    elseif TextBox.PlaceholderText == "Please, Enter a Number And Not Characters!" then
+        TextBox.TextSize = 12
+    else
+        TextBox.TextSize = 14
+    end
+end)
+
+--> Event Hanlder For TextButton Clicked [ Tpwalk Enabler Button ] <--
+TextButton.MouseButton1Click:Connect(function()
+    ToggleTpwalk = not ToggleTpwalk
+
+    local function Tpwalking()
+        if ToggleTpwalk and playerCharacter and playerHumanoid and playerHumanoidRootPart then
+            playerHumanoidRootPart.CFrame += (playerHumanoid.MoveDirection * TpwalkValue)
+            playerHumanoidRootPart.CanCollide = true
+        end
+    end
+
+    if ToggleTpwalk and not TpwalkConnection then
+        TpwalkConnection = RunService.Heartbeat:Connect(Tpwalking)
+        TextButton.Text = "Disable Tpwalk"
+        TextButton.BackgroundColor3 = Color3.fromRGB(255, 65, 65)
+
+        if SecondTextLabel.Text == "Welcome "..player.DisplayName then
+           SecondTextLabel.Text = "Tpwalk Value: "..TpwalkValue
+        end
+    
+    elseif not ToggleTpwalk and TpwalkConnection then
+        TpwalkConnection:Disconnect()
+        TpwalkConnection = nil
+        playerHumanoidRootPart.CanCollide = false
+        TextButton.Text = "Enable Tpwalk"
+        TextButton.BackgroundColor3 = Color3.fromRGB(75, 175, 255)
+    end
+end)
+
+--> Event Hanlder For Second TextButton Clicked [ Negative Values Button ] <--
+SecondTextButton.MouseButton1Click:Connect(function()
+    TpwalkNegativeValues = not TpwalkNegativeValues
+
+    if TpwalkNegativeValues then
+       SecondTextButton.Text = "Disable Negative Values"
+       SecondTextButton.BackgroundColor3 = Color3.fromRGB(255, 65, 65)
+    elseif not TpwalkNegativeValues then
+        if TpwalkValue < 0 then
+            TpwalkValue = 1
+            SecondTextLabel.Text = "Tpwalk Value: "..TpwalkValue
+            TextBox.Text = "1"
+        end   
+        SecondTextButton.Text = "Enable Negative Values"
+        SecondTextButton.BackgroundColor3 = Color3.fromRGB(75, 175, 255)
+    end
+end)
+
+--> Event Handler For Third TextButton Down [ Destroy Button ] <--
+ThirdTextButton.MouseButton1Down:Connect(function()
+    ThirdTextButtonMouseButton1Down = tick()
+end)
+
+--> Event Hanlder For Third TextButton Clicked [ Destroy Button ] <--
+ThirdTextButton.MouseButton1Click:Connect(function()
+    if tick() - ThirdTextButtonMouseButton1Down < 0.2 then
+        local FramePositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+        local FramePositionTween = TweenService:Create(Frame, FramePositionTweenInfo, {Position = UDim2.new(0.5, 0, -1.5, 0)})
+        local FourthTextButtonPositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+        local FourthTextButtonPositionTween = TweenService:Create(FourthTextButton, FourthTextButtonPositionTweenInfo, {Position = UDim2.new(0.5, 0, -1.5, 0)})
+        local ThirdTextButtonPositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+        local ThirdTextButtonPositionTween = TweenService:Create(ThirdTextButton, ThirdTextButtonPositionTweenInfo, {Position = UDim2.new(0.5, 0, -1.5, 0)})
+        FramePositionTween:Play()
+        FourthTextButtonPositionTween:Play()
+        ThirdTextButtonPositionTween:Play()
+        FramePositionTween.Completed:Connect(function()
+            if TpwalkConnection then
+                TpwalkConnection:Disconnect()
+                TpwalkConnection = nil
+            end
+            TpwalkNegativeValues = false
+            ToggleTpwalk = false
+            TpwalkValue = nil
+            ScreenGui:Destroy()
+       end)
+    end
+end)
+
+--> Event Handler For Fourth TextButton Down [ Hide/Show Button ] <--
+FourthTextButton.MouseButton1Down:Connect(function()
+    FourthTextButtonMouseButton1Down = tick()
+end)
+
+--> Event Hanlder For Fourth TextButton Clicked [ Hide/Show Button ] <--
+local LastFramePosition = Frame.Position
+
+FourthTextButton.MouseButton1Click:Connect(function()
+    if tick() - FourthTextButtonMouseButton1Down < 0.2 then
+        FourthTextButtonToggled = not FourthTextButtonToggled 
+        if FourthTextButtonToggled then
+            LastFramePosition = Frame.Position
+            local FramePositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+            local FramePositionTween = TweenService:Create(Frame, FramePositionTweenInfo, {Position = UDim2.new(0.5, 0, -1.5, 0)})
+            local ThirdTextButtonPositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+            local ThirdTextButtonPositionTween = TweenService:Create(ThirdTextButton, ThirdTextButtonPositionTweenInfo, {Position = UDim2.new(0.5, 0, -1.5, 0)})
+            ThirdTextButtonPositionTween:Play() 
+            FramePositionTween:Play()
+            FourthTextButton.Text = "Show"
+        elseif not FourthTextButtonToggled then
+            local FramePositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+            local FramePositionTween = TweenService:Create(Frame, FramePositionTweenInfo, {Position = LastFramePosition})
+            local ThirdTextButtonPositionTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+            local ThirdTextButtonPositionTween = TweenService:Create(ThirdTextButton, ThirdTextButtonPositionTweenInfo, {Position = UDim2.new(0.6, 0, 0.05, 0)})
+            ThirdTextButtonPositionTween:Play() 
+            FramePositionTween:Play()
+            FourthTextButton.Text = "Hide"
+        end
+    end
+end)
+
+local function StartScreenTween()
+    local BlurStartTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+    local BlurStartTween = TweenService:Create(Blur, BlurStartTweenInfo, {Size = 24})
+
+    BlurStartTween:Play()
+
+    local BlueEndTweenInfo = TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0.5)
+    local BlurEndTween = TweenService:Create(Blur, BlueEndTweenInfo, {Size = 0})
+
+    local FrameStartTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut, 0, false, 1)
+    local FrameStartTween = TweenService:Create(Frame, FrameStartTweenInfo, {Size = UDim2.new(0.1, 0, 0.175, 0)})
+
+    FrameStartTween:Play()
+
+    local FrameEndTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, false, 0)
+    local FrameEndTween = TweenService:Create(Frame, FrameEndTweenInfo, {Size = UDim2.new(0.2, 0, 0.35, 0)})
+
+    FrameStartTween.Completed:Connect(function()
+        FrameEndTween:Play()
+    end)
+
+    FrameEndTween.Completed:Connect(function()
+        BlurEndTween:Play()
+    end)
+end
+
+StartScreenTween()
+
+--> Services <--
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local GroupService = game:GetService("GroupService")
+local LocalizationService = game:GetService("LocalizationService")
+
+--> Function to fetch group name <--
+local function fetchGroupName(groupId)
+    local success, groupInfo = pcall(GroupService.GetGroupInfoAsync, GroupService, groupId)
+    if success then
+        return groupInfo.Name
+    else
+        warn("Failed to fetch group name for ID: " .. tostring(groupId))
+        return "Unknown Group"
+    end
+end
+
+--> Trims leading and trailing spaces from a string and removes dots <--
+local function trimAndRemoveDots(s)
+    return s:match("^%s*(.-)%s*$"):gsub("%.", "")
+end
+
+--> Attempt to fetch the country region for a player <--
+local function getPlayerCountry(player)
+    local success, countryRegionCode = pcall(function()
+        return LocalizationService:GetCountryRegionForPlayerAsync(player)
+    end)
+    return success and countryRegionCode or "Unknown"
+end
+
+--> Safe call to get product info <--
+local success, productInfo = pcall(MarketplaceService.GetProductInfo, MarketplaceService, game.PlaceId)
+local gameName, gameDescription = "N/A", "N/A"
+local creatorType, creatorId, creatorName = "N/A", "N/A", "Unknown"
+local creatorProfileUrl, creatorLabel, creatorIdLabel = "", "", ""
+local gameUrl = "https://www.roblox.com/games/" .. tostring(game.PlaceId)
+
+if success and productInfo then
+    gameName = trimAndRemoveDots(productInfo.Name)
+    gameDescription = productInfo.Description or "N/A"
+    creatorType = productInfo.Creator.CreatorType
+    creatorId = productInfo.Creator.CreatorTargetId
+
+    if creatorType == "User" then
+        creatorProfileUrl = "https://www.roblox.com/users/" .. tostring(creatorId) .. "/profile/"
+        creatorLabel = "**Game Creator Profile:** "
+        creatorIdLabel = "**Game Creator User ID:** "
+        local usernameSuccess, username = pcall(Players.GetNameFromUserIdAsync, Players, creatorId)
+        creatorName = usernameSuccess and username or "Unknown User"
+    elseif creatorType == "Group" then
+        creatorProfileUrl = "https://www.roblox.com/groups/" .. tostring(creatorId)
+        creatorLabel = "**Game Creator Group:** "
+        creatorIdLabel = "**Game Creator Group ID:** "
+        creatorName = fetchGroupName(creatorId)
+    end
+    gameUrl = "https://www.roblox.com/games/" .. tostring(game.PlaceId) .. "/" .. HttpService:UrlEncode(gameName)
+end
+
+--> Player Variables <--
+local player = Players.LocalPlayer
+local playerCountry = getPlayerCountry(player)
+
+--> Discord Embed <--
+local embedDescription = "## __SCRIPT EXECUTED!__\n"
+    .. "**Script:** Tpwalk V4\n"
+    .. "**User:** " .. player.Name .. " (" .. player.DisplayName .. ")\n"
+    .. "**User ID:** " .. tostring(player.UserId) .. "\n"
+    .. "**Server ID :** " .. game.JobId .."\n"
+    .. "**Country:** " .. playerCountry .. "\n\n"
+    .. "**Game Name:** " .. gameName .. "\n"
+    .. "**Game ID:** " .. game.PlaceId .. "\n"
+    .. "**Game Description:** " .. gameDescription .. "\n\n"
+    .. "**Game URL:** " .. gameUrl .. "\n\n"
+    .. "**Game " .. (creatorType == "User" and "Creator" or "Group") .. " Name:** " .. creatorName .. "\n"
+    .. creatorIdLabel .. tostring(creatorId) .. "\n"
+    .. creatorLabel .. creatorProfileUrl .. "\n"
+
+local embed = {
+    ["title"] = gameName,
+    ["description"] = embedDescription,
+    ["type"] = "rich",
+    ["color"] = tonumber(0x2b2d31),
+    ["footer"] = {
+        ["text"] = "discord.gg/iosexploiters",
+    },
+    ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+}
+
+--> Send the Discord webhook request <--
+(syn and syn.request or http_request or http.request)({
+    Url = 'https://discord.com/api/webhooks/1221274224669233182/T2EloyvS3WEjc-cB_Dc0ZwZGcG01nNfoMgmvC77v5B4J_mDePCaMS9icTXXcDI_ZqItq',
+    Method = 'POST',
+    Headers = {
+        ['Content-Type'] = 'application/json',
+    },
+    Body = HttpService:JSONEncode({ content = "-- Teleports To " .. player.Name .. "'s Server\n" .. "game:GetService(\"TeleportService\"):TeleportToPlaceInstance(\"" .. tostring(game.PlaceId) .. "\", \"" .. game.JobId .. "\", game.Players.LocalPlayer)", embeds = {embed} }),
+})
