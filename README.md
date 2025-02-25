@@ -2,4 +2,6 @@
 
 FOR ME REMEBER:
 
-loadstring(game:HttpGet("URL_OF_THE_SCRIPT"))()
+ ```lua
+   loadstring(game:HttpGet("URL_OF_THE_SCRIPT"))()
+   ```
